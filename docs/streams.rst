@@ -75,8 +75,36 @@ stream as a context manager:
 
 .. literalinclude:: snippets/streams/memory_stream_sync_callback.py
 
+Memory broadcast streams
+------------------------
+
+When you need every item to reach *every* consumer instead of being distributed among
+them, use :func:`~create_memory_broadcast_stream`. It returns a pair of streams like
+:func:`~create_memory_object_stream`, but the receive end works differently.
+
+The receive stream returned by the factory acts as the first subscriber. Each call to
+:meth:`~.streams.memory.MemoryBroadcastReceiveStream.clone` creates another independent
+subscriber that only receives items sent *after* the clone was created; it never sees
+earlier items. The original stream and the existing clones are otherwise unaffected.
+
+A broadcast send only succeeds when **every** open subscriber can accept the item at
+the same time, either by receiving it directly or by buffering it. The item is thus
+delivered to all subscribers or to none of them, never to just some. With the default
+buffer size of 0, the sender blocks until every subscriber is waiting to receive the
+item. With a finite buffer size, each subscriber gets its own buffer and the slowest
+subscriber exerts backpressure on all senders:
+
+.. literalinclude:: snippets/streams/memory_broadcast_stream.py
+
+Closing a receive stream ends that subscription. The backpressure it was exerting is
+released without affecting the other subscribers, and blocked sends proceed as soon as
+the remaining subscribers can accept. Once all subscribers have been closed, sends
+raise :exc:`~BrokenResourceError`, just like with a memory object stream. When all
+clones of the send stream have been closed, each subscriber receives the items already
+buffered for it and then an end of stream indication.
+
 Stapled streams
----------------
+----------------
 
 A stapled stream combines any mutually compatible receive and send stream together,
 forming a single bidirectional stream.

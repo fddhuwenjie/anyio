@@ -111,6 +111,7 @@ Context manager mix-in classes
 Streams and stream wrappers
 ---------------------------
 
+.. autofunction:: anyio.create_memory_broadcast_stream
 .. autofunction:: anyio.create_memory_object_stream
 
 .. autoclass:: anyio.abc.UnreliableObjectReceiveStream()
@@ -139,6 +140,9 @@ Streams and stream wrappers
 .. autoclass:: anyio.streams.file.FileStreamAttribute
 .. autoclass:: anyio.streams.file.FileReadStream
 .. autoclass:: anyio.streams.file.FileWriteStream
+.. autoclass:: anyio.streams.memory.MemoryBroadcastReceiveStream
+.. autoclass:: anyio.streams.memory.MemoryBroadcastSendStream
+.. autoclass:: anyio.streams.memory.MemoryBroadcastStreamStatistics
 .. autoclass:: anyio.streams.memory.MemoryObjectReceiveStream
 .. autoclass:: anyio.streams.memory.MemoryObjectSendStream
 .. autoclass:: anyio.streams.memory.MemoryObjectStreamStatistics

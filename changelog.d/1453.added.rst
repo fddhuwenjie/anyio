@@ -1,0 +1,5 @@
+Added ``create_memory_broadcast_stream()`` that delivers every sent item to all open
+subscribers instead of distributing items among competing receivers. Receive clones
+act as independent subscribers from the moment they are cloned, sends block until
+every subscriber can accept (with slow subscribers exerting backpressure), and
+closing a subscriber releases its backpressure without affecting the others
